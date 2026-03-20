@@ -2,7 +2,7 @@ name: EinAb Poller
 
 on:
   schedule:
-    - cron: "*/1 * * * *"
+    - cron: "*/5 * * * *"
   workflow_dispatch:
     inputs:
       notify_status:
@@ -50,7 +50,9 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           SHEET_ID: 1blyF1PRpGZMLGf6ZzSXp88kkGnvtetEUJ7Mk3sV-ExM
           SHEET_GID: 917833898
-          NOTIFY_STATUS: ${{ github.event.inputs.notify_status || 'frei' }}
+          # For scheduled runs, `github.event.inputs` is empty, so we must not reference it unguarded.
+          # Fallback to the default status substring (`frei`).
+          NOTIFY_STATUS: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.notify_status || 'frei' }}
           SKIP_EXISTING: ${{ github.event_name == 'workflow_dispatch' && (github.event.inputs.skip_existing || 'true') || 'true' }}
           DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && (github.event.inputs.dry_run || 'false') || 'false' }}
           RESET_STATE: ${{ github.event_name == 'workflow_dispatch' && (github.event.inputs.reset_state || 'false') || 'false' }}
