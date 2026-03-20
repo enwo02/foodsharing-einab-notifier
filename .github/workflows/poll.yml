@@ -3,7 +3,24 @@ name: EinAb Poller
 on:
   schedule:
     - cron: "*/5 * * * *"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      notify_status:
+        description: "Comma-separated list of status substrings to notify on"
+        required: false
+        default: "frei"
+      skip_existing:
+        description: "If true: first run after changes remembers existing entries (no notifications). If false: notifies immediately."
+        required: false
+        default: "true"
+      dry_run:
+        description: "If true: parses + prints but does not send Telegram messages."
+        required: false
+        default: "false"
+      reset_state:
+        description: "If true: clears state.json so existing entries can notify again (for testing)."
+        required: false
+        default: "false"
 
 permissions:
   contents: write
@@ -33,8 +50,10 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           SHEET_ID: 1blyF1PRpGZMLGf6ZzSXp88kkGnvtetEUJ7Mk3sV-ExM
           SHEET_GID: 917833898
-          NOTIFY_STATUS: frei
-          SKIP_EXISTING: "true"
+          NOTIFY_STATUS: ${{ github.event.inputs.notify_status || 'frei' }}
+          SKIP_EXISTING: ${{ github.event_name == 'workflow_dispatch' && (github.event.inputs.skip_existing || 'true') || 'true' }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && (github.event.inputs.dry_run || 'false') || 'false' }}
+          RESET_STATE: ${{ github.event_name == 'workflow_dispatch' && (github.event.inputs.reset_state || 'false') || 'false' }}
         run: |
           python notifier.py
 

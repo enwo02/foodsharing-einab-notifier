@@ -261,6 +261,11 @@ def main() -> int:
     # Make arg handling tolerant if argparse sees --skip-existing explicitly.
     ap.add_argument("--no-skip-existing", dest="skip_existing", action="store_false")
     ap.add_argument("--dry-run", default=os.environ.get("DRY_RUN", "false").lower() in ("1", "true", "yes", "y", "on"), action="store_true")
+    ap.add_argument(
+        "--reset-state",
+        default=os.environ.get("RESET_STATE", "false").lower() in ("1", "true", "yes", "y", "on"),
+        action="store_true",
+    )
     args = ap.parse_args()
 
     # argparse quirk: we defined --skip-existing as both a boolean and store_true.
@@ -280,6 +285,8 @@ def main() -> int:
         return 2
 
     state = load_state(args.state_path)
+    if args.reset_state:
+        state = {"notified_keys": [], "bootstrapped": False, "last_checked_utc": None}
     notified_keys = set(state.get("notified_keys", []))
 
     print(f"Fetching sheet export (sheet_id={args.sheet_id}, gid={args.gid})...")

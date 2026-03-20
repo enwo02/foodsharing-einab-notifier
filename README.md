@@ -66,6 +66,12 @@ In your private GitHub repo, set these Secrets:
 
 Then enable the workflow.
 
+### Manual run (debug)
+
+In **Actions → Workflows → EinAb Poller → Run workflow**, you can override:
+- `skip_existing` (set to `false` to immediately notify current `frei` entries for testing)
+- `reset_state` (set to `true` if you already bootstrapped and want to re-notify current entries again)
+
 ## Configuration (env vars)
 
 - `SHEET_ID` (default is the sheet from your link)
