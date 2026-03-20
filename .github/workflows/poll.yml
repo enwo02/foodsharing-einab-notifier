@@ -2,7 +2,7 @@ name: EinAb Poller
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/1 * * * *"
   workflow_dispatch:
     inputs:
       notify_status:
@@ -12,7 +12,7 @@ on:
       skip_existing:
         description: "If true: first run after changes remembers existing entries (no notifications). If false: notifies immediately."
         required: false
-        default: "true"
+        default: "false"
       dry_run:
         description: "If true: parses + prints but does not send Telegram messages."
         required: false
@@ -20,7 +20,7 @@ on:
       reset_state:
         description: "If true: clears state.json so existing entries can notify again (for testing)."
         required: false
-        default: "false"
+        default: "true"
 
 permissions:
   contents: write
