@@ -20,7 +20,7 @@ on:
       reset_state:
         description: "If true: clears state.json so existing entries can notify again (for testing)."
         required: false
-        default: "true"
+        default: "false"
 
 permissions:
   contents: write

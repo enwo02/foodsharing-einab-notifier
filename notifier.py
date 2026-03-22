@@ -95,7 +95,7 @@ def _guess_delimiter(sample: str) -> str:
 
 def fetch_sheet_csv(sheet_id: str, gid: str, timeout_s: int = 30) -> str:
     headers = {
-        "User-Agent": "einab-notifier/1.0 (+https://example.local)",
+        "User-Agent": "foodsharing-einab-notifier/1.0",
         "Accept": "text/csv,text/plain,*/*",
     }
 
